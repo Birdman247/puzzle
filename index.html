@@ -86,6 +86,7 @@
 <body>
     <div class="container">
         <ul class="description-list">
+            <!-- List of descriptions -->
             <li class="description-item"><span>1. Horizontal:</span> Red fruit</li>
             <li class="description-item"><span>2. Horizontal:</span> Yellow fruit</li>
             <li class="description-item"><span>3. Horizontal:</span> Orange fruit</li>
@@ -140,38 +141,45 @@
         // Generate horizontal and vertical words
         const horizontalWords = [];
         const verticalWords = [];
+        const usedWords = new Set();
 
         while (horizontalWords.length < 6) {
             const randomIndex = Math.floor(Math.random() * words.length);
-            const word = words.splice(randomIndex, 1)[0];
-            const description = word.description;
-            const row = Math.floor(Math.random() * 12);
-            const col = Math.floor(Math.random() * (12 - word.word.length + 1));
-            const endCol = col + word.word.length - 1;
+            const word = words[randomIndex];
+            if (!usedWords.has(word.word)) {
+                usedWords.add(word.word);
+                const description = word.description;
+                const row = Math.floor(Math.random() * 12);
+                const col = Math.floor(Math.random() * (12 - word.word.length + 1));
+                const endCol = col + word.word.length - 1;
 
-            horizontalWords.push({ row, col, word: word.word, description });
+                horizontalWords.push({ row, col, word: word.word, description });
+            }
         }
 
         while (verticalWords.length < 6) {
             const randomIndex = Math.floor(Math.random() * words.length);
-            const word = words.splice(randomIndex, 1)[0];
-            const description = word.description;
-            const col = Math.floor(Math.random() * 12);
-            const row = Math.floor(Math.random() * (12 - word.word.length + 1));
-            const endRow = row + word.word.length - 1;
+            const word = words[randomIndex];
+            if (!usedWords.has(word.word)) {
+                usedWords.add(word.word);
+                const description = word.description;
+                const col = Math.floor(Math.random() * 12);
+                const row = Math.floor(Math.random() * (12 - word.word.length + 1));
+                const endRow = row + word.word.length - 1;
 
-            verticalWords.push({ row, col, word: word.word, description });
+                verticalWords.push({ row, col, word: word.word, description });
+            }
         }
 
         // Fill the grid with words
-        horizontalWords.forEach(word => {
+        horizontalWords.forEach((word, index) => {
             for (let i = 0; i < word.word.length; i++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${word.row}"][data-col="${word.col + i}"]`);
                 cell.dataset.word = word.word;
             }
         });
 
-        verticalWords.forEach(word => {
+        verticalWords.forEach((word, index) => {
             for (let i = 0; i < word.word.length; i++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${word.row + i}"][data-col="${word.col}"]`);
                 cell.dataset.word = word.word;
@@ -211,14 +219,14 @@
             const letter = prompt('Enter a letter:');
             if (letter) {
                 const word = cell.dataset.word;
-                const index = +cell.dataset.col - word.indexOf(letter);
-                if (word.includes(letter)) {
-                    cell.textContent = letter;
+                const index = +cell.dataset.col - word.indexOf(letter.toUpperCase());
+                if (word.toUpperCase().includes(letter.toUpperCase())) {
+                    cell.textContent = letter.toUpperCase();
                     cell.classList.add('correct');
                     cell.removeEventListener('click', handleCellClick);
-                    checkWord(word);
+                    checkWord(word.toUpperCase());
                 } else {
-                    cell.textContent = letter;
+                    cell.textContent = letter.toUpperCase();
                     cell.classList.add('incorrect');
                 }
             }
