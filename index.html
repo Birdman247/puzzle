@@ -72,7 +72,13 @@
             { word: "ORANGE", description: "Orange fruit" },
             { word: "GRAPE", description: "Small round fruit" },
             { word: "MANGO", description: "Tropical fruit" },
-            { word: "PEAR", description: "Fruit with a core" }
+            { word: "PEAR", description: "Fruit with a core" },
+            { word: "PEACH", description: "Fuzzy fruit" },
+            { word: "WATERMELON", description: "Summer fruit" },
+            { word: "PINEAPPLE", description: "Tropical fruit" },
+            { word: "STRAWBERRY", description: "Red berry" },
+            { word: "BLUEBERRY", description: "Small purple fruit" },
+            { word: "KIWI", description: "Green fruit with brown skin" }
         ];
 
         const gridContainer = document.querySelector('.grid');
@@ -95,28 +101,24 @@
 
         while (horizontalWords.length < 6) {
             const randomIndex = Math.floor(Math.random() * words.length);
-            const word = words[randomIndex].word;
-            const description = words[randomIndex].description;
+            const word = words.splice(randomIndex, 1)[0];
+            const description = word.description;
             const row = Math.floor(Math.random() * 12);
-            const col = Math.floor(Math.random() * (12 - word.length + 1));
-            const endCol = col + word.length - 1;
+            const col = Math.floor(Math.random() * (12 - word.word.length + 1));
+            const endCol = col + word.word.length - 1;
 
-            if (!horizontalWords.some(word => word.row === row && word.col === col)) {
-                horizontalWords.push({ row, col, word, description });
-            }
+            horizontalWords.push({ row, col, word: word.word, description });
         }
 
         while (verticalWords.length < 6) {
             const randomIndex = Math.floor(Math.random() * words.length);
-            const word = words[randomIndex].word;
-            const description = words[randomIndex].description;
+            const word = words.splice(randomIndex, 1)[0];
+            const description = word.description;
             const col = Math.floor(Math.random() * 12);
-            const row = Math.floor(Math.random() * (12 - word.length + 1));
-            const endRow = row + word.length - 1;
+            const row = Math.floor(Math.random() * (12 - word.word.length + 1));
+            const endRow = row + word.word.length - 1;
 
-            if (!verticalWords.some(word => word.col === col && word.row === row)) {
-                verticalWords.push({ row, col, word, description });
-            }
+            verticalWords.push({ row, col, word: word.word, description });
         }
 
         // Fill the grid with words
@@ -165,6 +167,45 @@
         function getDescription(word) {
             const foundWord = words.find(w => w.word === word);
             return foundWord ? foundWord.description : '';
+        }
+
+        // Add event listeners for cell clicks
+        gridContainer.addEventListener('click', handleCellClick);
+
+        function handleCellClick(event) {
+            const cell = event.target;
+            if (!cell.classList.contains('black-cell')) {
+                const letter = prompt('Enter a letter:');
+                if (letter) {
+                    const word = cell.dataset.word;
+                    const index = +cell.dataset.col - word.indexOf(letter);
+                    if (word.includes(letter)) {
+                        cell.textContent = letter;
+                        cell.classList.add('correct');
+                        cell.removeEventListener('click', handleCellClick);
+                        checkWord(word);
+                    } else {
+                        cell.textContent = letter;
+                        cell.classList.add('incorrect');
+                    }
+                }
+            }
+        }
+
+        function checkWord(word) {
+            const cells = gridContainer.querySelectorAll(`.cell[data-word="${word}"]`);
+            let isWordComplete = true;
+            cells.forEach(cell => {
+                if (!cell.classList.contains('correct')) {
+                    isWordComplete = false;
+                }
+            });
+            if (isWordComplete) {
+                cells.forEach(cell => {
+                    cell.classList.remove('correct');
+                    cell.classList.add('completed');
+                });
+            }
         }
     </script>
 </body>
