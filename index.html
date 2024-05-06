@@ -53,10 +53,6 @@
             background-color: lightcoral;
         }
 
-        .completed {
-            background-color: lightgreen;
-        }
-
         .description-list {
             margin-right: 20px;
         }
@@ -87,18 +83,6 @@
     <div class="container">
         <ul class="description-list">
             <!-- List of descriptions -->
-            <li class="description-item"><span>1. Horizontal:</span> Red fruit</li>
-            <li class="description-item"><span>2. Horizontal:</span> Yellow fruit</li>
-            <li class="description-item"><span>3. Horizontal:</span> Orange fruit</li>
-            <li class="description-item"><span>4. Horizontal:</span> Small round fruit</li>
-            <li class="description-item"><span>5. Horizontal:</span> Tropical fruit</li>
-            <li class="description-item"><span>6. Horizontal:</span> Fruit with a core</li>
-            <li class="description-item"><span>1. Vertical:</span> Red fruit</li>
-            <li class="description-item"><span>2. Vertical:</span> Yellow fruit</li>
-            <li class="description-item"><span>3. Vertical:</span> Orange fruit</li>
-            <li class="description-item"><span>4. Vertical:</span> Small round fruit</li>
-            <li class="description-item"><span>5. Vertical:</span> Tropical fruit</li>
-            <li class="description-item"><span>6. Vertical:</span> Fruit with a core</li>
         </ul>
         <div class="crossword">
             <div class="grid">
@@ -143,6 +127,7 @@
         const verticalWords = [];
         const usedWords = new Set();
 
+        // Generate unique horizontal words
         while (horizontalWords.length < 6) {
             const randomIndex = Math.floor(Math.random() * words.length);
             const word = words[randomIndex];
@@ -152,11 +137,11 @@
                 const row = Math.floor(Math.random() * 12);
                 const col = Math.floor(Math.random() * (12 - word.word.length + 1));
                 const endCol = col + word.word.length - 1;
-
                 horizontalWords.push({ row, col, word: word.word, description });
             }
         }
 
+        // Generate unique vertical words
         while (verticalWords.length < 6) {
             const randomIndex = Math.floor(Math.random() * words.length);
             const word = words[randomIndex];
@@ -166,7 +151,6 @@
                 const col = Math.floor(Math.random() * 12);
                 const row = Math.floor(Math.random() * (12 - word.word.length + 1));
                 const endRow = row + word.word.length - 1;
-
                 verticalWords.push({ row, col, word: word.word, description });
             }
         }
@@ -224,32 +208,14 @@
                     cell.textContent = letter.toUpperCase();
                     cell.classList.add('correct');
                     cell.removeEventListener('click', handleCellClick);
-                    checkWord(word.toUpperCase());
                 } else {
                     cell.textContent = letter.toUpperCase();
                     cell.classList.add('incorrect');
                 }
             }
         }
-
-        function checkWord(word) {
-            const cells = gridContainer.querySelectorAll(`.cell[data-word="${word}"]`);
-            let isWordComplete = true;
-            cells.forEach(cell => {
-                if (!cell.classList.contains('correct')) {
-                    isWordComplete = false;
-                }
-            });
-            if (isWordComplete) {
-                cells.forEach(cell => {
-                    cell.classList.remove('correct');
-                    cell.classList.add('completed');
-                });
-            }
-        }
     </script>
 </body>
 </html>
-
 
 
