@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crossword Puzzle</title>
+    <style>
+        .crossword-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .word-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .word-list li {
+            margin-bottom: 10px;
+        }
+
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 30px);
+            grid-template-rows: repeat(10, 30px);
+            gap: 1px;
+        }
+
+        .word-grid-item {
+            background-color: white;
+            border: 1px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .filled {
+            background-color: lightgray;
+        }
+
+        .correct {
+            background-color: lightgreen;
+        }
+
+        .incorrect {
+            background-color: lightcoral;
+        }
+    </style>
+</head>
+<body>
+    <div class="crossword-container">
+        <ul class="word-list">
+            <li>1. Small, red or black fruit with a tart flavor</li>
+            <li>2. Green fruit with a hard shell and aromatic, orange flesh</li>
+            <li>3. Small, green fruit with a tart flavor</li>
+            <li>4. Gourd-like fruit with a hard, woody shell</li>
+            <li>5. Brown fruit with a rough, sandy skin and sweet, grainy flesh</li>
+            <li>6. Brown fruit with a hard shell and creamy, aromatic flesh</li>
+            <li>7. Purple fruit with a star-shaped cross-section and sweet, milky flesh</li>
+            <li>8. Green, pear-shaped fruit with a mild flavor</li>
+            <li>9. Large fruit with a spiky outer shell and a sweet, fruity flavor</li>
+            <li>10. Small, black fruit with a sweet and sour flavor</li>
+            <li>11. Small, green fruit with a tart flavor</li>
+            <li>12. Green fruit with a hard shell and tart, crunchy flesh</li>
+            <li>13. Small, finger-shaped citrus fruit with a tart flavor and juicy pearls</li>
+            <li>14. Small, purple fruit with a sweet and tart flavor</li>
+            <li>15. Small, green fruit with a sweet and tangy flavor</li>
+            <li>16. Small, red or yellow fruit with a sweet and tart flavor</li>
+            <li>17. Small, oval fruit with a spiky yellow or orange skin and green, jelly-like flesh</li>
+            <li>18. Green fruit with a hard shell and tart, crunchy flesh</li>
+            <li>19. Long, flat fruit with a sweet, cottony pulp</li>
+            <li>20. Green fruit with a hard shell and creamy, aromatic flesh</li>
+            <li>21. Small, red fruit with a sweet and tart flavor</li>
+            <li>22. Small, red or yellow fruit with a sweet, apple-like flavor</li>
+            <li>23. Small, purple fruit with a tart flavor</li>
+            <li>24. Yellow fruit with a sweet, custard-like flesh</li>
+        </ul>
+        <div class="word-grid">
+            <!-- 10x10 grid -->
+            <!-- Each div represents a grid cell -->
+            <!-- Add event listeners for click events -->
+            <!-- Add data attributes to store row and column indices -->
+        </div>
+    </div>
+
+    <script>
+        const wordBank = [
+            "CHERRY", "BAELFRUIT", "BILIMBI", "CALABASH", "CHICOFRUIT", "CUPUACU", "CAIMITO", "CHAYOTE", 
+            "CEMPEDAK", "DABAI", "EMERALDPLUM", "ELEPHANTAPPLE", "FINGERLIME", "GRUMICHAMA", "GENIP", 
+            "HOGPLUM", "HORNEDMELON", "HOGAPPLE", "ICECREAMBEAN", "ILAMA", "JATOBA", "JUJUBE", "KOKUM"
+        ];
+
+        const wordDescriptions = [
+            "Small, red or black fruit with a tart flavor",
+            "Green fruit with a hard shell and aromatic, orange flesh",
+            "Small, green fruit with a tart flavor",
+            "Gourd-like fruit with a hard, woody shell",
+            "Brown fruit with a rough, sandy skin and sweet, grainy flesh",
+            "Brown fruit with a hard shell and creamy, aromatic flesh",
+            "Purple fruit with a star-shaped cross-section and sweet, milky flesh",
+            "Green, pear-shaped fruit with a mild flavor",
+            "Large fruit with a spiky outer shell and a sweet, fruity flavor",
+            "Small, black fruit with a sweet and sour flavor",
+            "Small, green fruit with a tart flavor",
+            "Green fruit with a hard shell and tart, crunchy flesh",
+            "Small, finger-shaped citrus fruit with a tart flavor and juicy pearls",
+            "Small, purple fruit with a sweet and tart flavor",
+            "Small, green fruit with a sweet and tangy flavor",
+            "Small, red or yellow fruit with a sweet and tart flavor",
+            "Small, oval fruit with a spiky yellow or orange skin and green, jelly-like flesh",
+            "Green fruit with a hard shell and tart, crunchy flesh",
+            "Long, flat fruit with a sweet, cottony pulp",
+            "Green fruit with a hard shell and creamy, aromatic flesh",
+            "Small, red fruit with a sweet and tart flavor",
+            "Small, red or yellow fruit with a sweet, apple-like flavor",
+            "Small, purple fruit with a tart flavor",
+            "Yellow fruit with a sweet, custard-like flesh"
+        ];
+
+        const crosswordGrid = document.querySelector(".word-grid");
+
+        // Populate the crossword grid
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                const gridItem = document.createElement("div");
+                gridItem.classList.add("word-grid-item");
+                gridItem.dataset.row = i;
+                gridItem.dataset.col = j;
+                crosswordGrid.appendChild(gridItem);
+            }
+        }
+
+        // Populate the word list with descriptions
+        const wordList = document.querySelector(".word-list");
+        wordDescriptions.forEach((description, index) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${index + 1}. ${description}`;
+            wordList.appendChild(listItem);
+        });
+
+        // Add event listener for grid items
+        crosswordGrid.addEventListener("click", handleGridItemClick);
+
+        // Handle click events on grid items
+        function handleGridItemClick(event) {
+            const gridItem = event.target;
+            const row = gridItem.dataset.row;
+            const col = gridItem.dataset.col;
+
+            // Prompt the user to enter a letter for the selected grid item
+            const letter = prompt("Enter a letter:");
+
+            // Check if the letter is correct for the corresponding word
+            const wordIndex = getWordIndex(row, col);
+            const word = wordBank[wordIndex];
+            if (word.charAt(col - row) === letter.toUpperCase()) {
+                // Letter is correct, fill the grid item
+                gridItem.textContent = letter.toUpperCase();
+                gridItem.classList.add("filled");
+
+                // Check if the word is complete
+                if (isWordComplete(row, col)) {
+                    markWordComplete(row, col);
+                }
+            } else {
+                // Letter is incorrect, mark the grid item as incorrect
+                gridItem.classList.add("incorrect");
+            }
+        }
+
+        // Get the index of the word corresponding to the given grid coordinates
+        function getWordIndex(row, col) {
+            return col - row;
+        }
+
+        // Check if the word corresponding to the given grid coordinates is complete
+        function isWordComplete(row, col) {
+            const wordIndex = getWordIndex(row, col);
+            const word = wordBank[wordIndex];
+            for (let i = 0; i < word.length; i++) {
+                const gridItem = crosswordGrid.querySelector(`[data-row="${row + i}"][data-col="${col - i}"]`);
+                if (!gridItem.classList.contains("filled")) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Mark the word corresponding to the given grid coordinates as complete
+        function markWordComplete(row, col) {
+            const wordIndex = getWordIndex(row, col);
+            const word = wordBank[wordIndex];
+            for (let i = 0; i < word.length; i++) {
+                const gridItem = crosswordGrid.querySelector(`[data-row="${row + i}"][data-col="${col - i}"]`);
+                gridItem.classList.add("correct");
+            }
+        }
+    </script>
+</body>
+</html>
