@@ -200,9 +200,11 @@
 
         function handleCellClick(event) {
             const cell = event.target;
+            const word = cell.dataset.word;
+            const description = getDescription(word);
+            showDescription(description);
             const letter = prompt('Enter a letter:');
             if (letter) {
-                const word = cell.dataset.word;
                 const index = +cell.dataset.col - word.indexOf(letter.toUpperCase());
                 if (word.toUpperCase().includes(letter.toUpperCase())) {
                     cell.textContent = letter.toUpperCase();
@@ -213,6 +215,26 @@
                     cell.classList.add('incorrect');
                 }
             }
+        }
+
+        function getDescription(word) {
+            const horizontalWord = horizontalWords.find(obj => obj.word === word);
+            const verticalWord = verticalWords.find(obj => obj.word === word);
+            if (horizontalWord) {
+                return horizontalWord.description;
+            } else if (verticalWord) {
+                return verticalWord.description;
+            }
+        }
+
+        function showDescription(description) {
+            const descriptions = document.querySelectorAll('.description');
+            descriptions.forEach(desc => {
+                desc.style.display = 'none';
+            });
+            const descriptionItem = document.querySelector(`.description-item:contains(${description})`);
+            const desc = descriptionItem.querySelector('.description');
+            desc.style.display = 'block';
         }
     </script>
 </body>
