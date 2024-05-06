@@ -158,7 +158,7 @@
             for (let i = 0; i < word.word.length; i++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${word.row}"][data-col="${word.col + i}"]`);
                 cell.dataset.word = word.word;
-                cell.dataset.number = word.col + i === word.col ? word.row + 1 : null;
+                cell.dataset.description = word.col + i === word.col ? word.description : '';
             }
         });
 
@@ -166,7 +166,7 @@
             for (let i = 0; i < word.word.length; i++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${word.row + i}"][data-col="${word.col}"]`);
                 cell.dataset.word = word.word;
-                cell.dataset.number = word.row + i === word.row ? word.col + 1 : null;
+                cell.dataset.description = word.row + i === word.row ? word.description : '';
             }
         });
 
@@ -200,17 +200,16 @@
 
         function handleCellClick(event) {
             const cell = event.target;
-            const description = cell.dataset.number ? cell.dataset.number : '';
-            const word = cell.dataset.word;
-            showDescription(description, word);
+            const description = cell.dataset.description ? cell.dataset.description : '';
+            showDescription(description);
         }
 
-        function showDescription(description, word) {
+        function showDescription(description) {
             const descriptionItems = document.querySelectorAll('.description-item');
             descriptionItems.forEach(item => {
-                const number = item.querySelector('span').textContent.split('.')[0];
-                if (number.trim() === description) {
-                    item.querySelector('.description').textContent = word;
+                const text = item.textContent.split('.')[1].trim();
+                if (text === description) {
+                    item.querySelector('.description').textContent = description;
                 } else {
                     item.querySelector('.description').textContent = '';
                 }
