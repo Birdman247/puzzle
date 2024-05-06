@@ -7,14 +7,20 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        .crossword-container {
+        .container {
             display: flex;
             justify-content: center;
             align-items: center;
             margin-top: 20px;
             position: relative;
+        }
+
+        .crossword {
+            display: flex;
         }
 
         .grid {
@@ -51,6 +57,22 @@
             background-color: lightgreen;
         }
 
+        .description-list {
+            margin-right: 20px;
+        }
+
+        .description-item {
+            margin-bottom: 10px;
+        }
+
+        .description-item span {
+            font-weight: bold;
+        }
+
+        .description-item:hover .description {
+            display: block;
+        }
+
         .description {
             position: absolute;
             background-color: rgba(255, 255, 255, 0.8);
@@ -62,14 +84,17 @@
     </style>
 </head>
 <body>
-    <div class="crossword-container">
-        <div class="grid">
-            <!-- Generate 12x12 grid -->
-            <!-- Each cell represents a square in the crossword -->
+    <div class="container">
+        <ul class="description-list">
+            <!-- List of descriptions -->
+        </ul>
+        <div class="crossword">
+            <div class="grid">
+                <!-- Generate 12x12 grid -->
+                <!-- Each cell represents a square in the crossword -->
+            </div>
         </div>
     </div>
-
-    <div class="description"></div>
 
     <script>
         const words = [
@@ -88,7 +113,7 @@
         ];
 
         const gridContainer = document.querySelector('.grid');
-        const descriptionContainer = document.querySelector('.description');
+        const descriptionList = document.querySelector('.description-list');
 
         // Generate the 12x12 grid
         for (let i = 0; i < 12; i++) {
@@ -152,48 +177,38 @@
             }
         }
 
-        // Add event listeners for cell hover
-        gridContainer.addEventListener('mouseover', handleCellHover);
-        gridContainer.addEventListener('mouseout', handleCellHover);
+        // Fill the description list
+        horizontalWords.forEach((word, index) => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('description-item');
+            listItem.innerHTML = `<span>${index + 1}. Horizontal: </span>${word.description}`;
+            descriptionList.appendChild(listItem);
+        });
 
-        function handleCellHover(event) {
-            const cell = event.target;
-            const description = cell.dataset.word ? getDescription(cell.dataset.word) : '';
-            if (description) {
-                const rect = cell.getBoundingClientRect();
-                descriptionContainer.textContent = description;
-                descriptionContainer.style.top = `${rect.top + window.scrollY}px`;
-                descriptionContainer.style.left = `${rect.left + window.scrollX}px`;
-                descriptionContainer.style.display = 'block';
-            } else {
-                descriptionContainer.style.display = 'none';
-            }
-        }
+        verticalWords.forEach((word, index) => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('description-item');
+            listItem.innerHTML = `<span>${index + 1}. Vertical: </span>${word.description}`;
+            descriptionList.appendChild(listItem);
+        });
 
-        function getDescription(word) {
-            const foundWord = words.find(w => w.word === word);
-            return foundWord ? foundWord.description : '';
-        }
-
-        // Add event listeners for cell clicks
+        // Event listener for cell click
         gridContainer.addEventListener('click', handleCellClick);
 
         function handleCellClick(event) {
             const cell = event.target;
-            if (!cell.classList.contains('black-cell')) {
-                const letter = prompt('Enter a letter:');
-                if (letter) {
-                    const word = cell.dataset.word;
-                    const index = +cell.dataset.col - word.indexOf(letter);
-                    if (word.includes(letter)) {
-                        cell.textContent = letter;
-                        cell.classList.add('correct');
-                        cell.removeEventListener('click', handleCellClick);
-                        checkWord(word);
-                    } else {
-                        cell.textContent = letter;
-                        cell.classList.add('incorrect');
-                    }
+            const letter = prompt('Enter a letter:');
+            if (letter) {
+                const word = cell.dataset.word;
+                const index = +cell.dataset.col - word.indexOf(letter);
+                if (word.includes(letter)) {
+                    cell.textContent = letter;
+                    cell.classList.add('correct');
+                    cell.removeEventListener('click', handleCellClick);
+                    checkWord(word);
+                } else {
+                    cell.textContent = letter;
+                    cell.classList.add('incorrect');
                 }
             }
         }
@@ -216,4 +231,5 @@
     </script>
 </body>
 </html>
+
 
