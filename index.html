@@ -86,7 +86,18 @@
 <body>
     <div class="container">
         <ul class="description-list">
-            <!-- List of descriptions -->
+            <li class="description-item"><span>1. Horizontal:</span> Red fruit</li>
+            <li class="description-item"><span>2. Horizontal:</span> Yellow fruit</li>
+            <li class="description-item"><span>3. Horizontal:</span> Orange fruit</li>
+            <li class="description-item"><span>4. Horizontal:</span> Small round fruit</li>
+            <li class="description-item"><span>5. Horizontal:</span> Tropical fruit</li>
+            <li class="description-item"><span>6. Horizontal:</span> Fruit with a core</li>
+            <li class="description-item"><span>1. Vertical:</span> Red fruit</li>
+            <li class="description-item"><span>2. Vertical:</span> Yellow fruit</li>
+            <li class="description-item"><span>3. Vertical:</span> Orange fruit</li>
+            <li class="description-item"><span>4. Vertical:</span> Small round fruit</li>
+            <li class="description-item"><span>5. Vertical:</span> Tropical fruit</li>
+            <li class="description-item"><span>6. Vertical:</span> Fruit with a core</li>
         </ul>
         <div class="crossword">
             <div class="grid">
@@ -181,14 +192,14 @@
         horizontalWords.forEach((word, index) => {
             const listItem = document.createElement('li');
             listItem.classList.add('description-item');
-            listItem.innerHTML = `<span>${index + 1}. Horizontal: </span>${word.description}`;
+            listItem.innerHTML = `<span>${index + 1}. Horizontal:</span> ${word.description}`;
             descriptionList.appendChild(listItem);
         });
 
         verticalWords.forEach((word, index) => {
             const listItem = document.createElement('li');
             listItem.classList.add('description-item');
-            listItem.innerHTML = `<span>${index + 1}. Vertical: </span>${word.description}`;
+            listItem.innerHTML = `<span>${index + 1}. Vertical:</span> ${word.description}`;
             descriptionList.appendChild(listItem);
         });
 
@@ -231,5 +242,6 @@
     </script>
 </body>
 </html>
+
 
 
