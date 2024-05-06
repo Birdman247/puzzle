@@ -44,6 +44,15 @@
         .incorrect {
             background-color: lightcoral;
         }
+
+        .description {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border: 1px solid #000;
+            z-index: 1;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -53,6 +62,8 @@
             <!-- Each cell represents a square in the crossword -->
         </div>
     </div>
+
+    <div class="description"></div>
 
     <script>
         const words = [
@@ -65,6 +76,7 @@
         ];
 
         const gridContainer = document.querySelector('.grid');
+        const descriptionContainer = document.querySelector('.description');
 
         // Generate the 12x12 grid
         for (let i = 0; i < 12; i++) {
@@ -111,7 +123,6 @@
         horizontalWords.forEach(word => {
             for (let i = 0; i < word.word.length; i++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${word.row}"][data-col="${word.col + i}"]`);
-                cell.textContent = word.word[i];
                 cell.dataset.word = word.word;
             }
         });
@@ -119,31 +130,42 @@
         verticalWords.forEach(word => {
             for (let i = 0; i < word.word.length; i++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${word.row + i}"][data-col="${word.col}"]`);
-                cell.textContent = word.word[i];
                 cell.dataset.word = word.word;
             }
         });
 
-        // Add event listener for cell clicks
-        gridContainer.addEventListener('click', handleCellClick);
-
-        function handleCellClick(event) {
-            const cell = event.target;
-            if (!cell.classList.contains('black-cell')) {
-                const letter = prompt('Enter a letter:');
-                if (letter !== null) {
-                    const word = cell.dataset.word;
-                    const index = word.indexOf(letter.toUpperCase());
-                    if (index !== -1) {
-                        cell.textContent = letter.toUpperCase();
-                        cell.classList.add('correct');
-                    } else {
-                        cell.classList.add('incorrect');
-                    }
+        // Add black cells
+        for (let i = 0; i < 12; i++) {
+            for (let j = 0; j < 12; j++) {
+                const cell = gridContainer.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
+                if (!cell.dataset.word) {
+                    cell.classList.add('black-cell');
                 }
             }
+        }
+
+        // Add event listeners for cell hover
+        gridContainer.addEventListener('mouseover', handleCellHover);
+        gridContainer.addEventListener('mouseout', handleCellHover);
+
+        function handleCellHover(event) {
+            const cell = event.target;
+            const description = cell.dataset.word ? getDescription(cell.dataset.word) : '';
+            if (description) {
+                const rect = cell.getBoundingClientRect();
+                descriptionContainer.textContent = description;
+                descriptionContainer.style.top = `${rect.top + window.scrollY}px`;
+                descriptionContainer.style.left = `${rect.left + window.scrollX}px`;
+                descriptionContainer.style.display = 'block';
+            } else {
+                descriptionContainer.style.display = 'none';
+            }
+        }
+
+        function getDescription(word) {
+            const foundWord = words.find(w => w.word === word);
+            return foundWord ? foundWord.description : '';
         }
     </script>
 </body>
 </html>
-
