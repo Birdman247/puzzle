@@ -25,8 +25,8 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(12, 30px);
-            grid-template-rows: repeat(12, 30px);
+            grid-template-columns: repeat(24, 30px);
+            grid-template-rows: repeat(24, 30px);
             gap: 1px;
         }
 
@@ -90,7 +90,7 @@
         </ul>
         <div class="crossword">
             <div class="grid">
-                <!-- Generate 12x12 grid -->
+                <!-- Generate 24x24 grid -->
                 <!-- Each cell represents a square in the crossword -->
             </div>
         </div>
@@ -109,15 +109,16 @@
             { word: "PINEAPPLE", description: "Tropical fruit" },
             { word: "STRAWBERRY", description: "Red berry" },
             { word: "BLUEBERRY", description: "Small purple fruit" },
-            { word: "KIWI", description: "Green fruit with brown skin" }
+            { word: "KIWI", description: "Green fruit with brown skin" },
+            // Add more words if needed
         ];
 
         const gridContainer = document.querySelector('.grid');
         const descriptionList = document.querySelector('.description-list');
 
-        // Generate the 12x12 grid
-        for (let i = 0; i < 12; i++) {
-            for (let j = 0; j < 12; j++) {
+        // Generate the 24x24 grid
+        for (let i = 0; i < 24; i++) {
+            for (let j = 0; j < 24; j++) {
                 const cell = document.createElement('div');
                 cell.classList.add('cell');
                 cell.dataset.row = i;
@@ -134,8 +135,8 @@
             const randomIndex = Math.floor(Math.random() * words.length);
             const word = words.splice(randomIndex, 1)[0];
             const description = word.description;
-            const row = Math.floor(Math.random() * 12);
-            const col = Math.floor(Math.random() * (12 - word.word.length + 1));
+            const row = Math.floor(Math.random() * 24);
+            const col = Math.floor(Math.random() * (24 - word.word.length + 1));
             const endCol = col + word.word.length - 1;
 
             horizontalWords.push({ row, col, word: word.word, description });
@@ -145,8 +146,8 @@
             const randomIndex = Math.floor(Math.random() * words.length);
             const word = words.splice(randomIndex, 1)[0];
             const description = word.description;
-            const col = Math.floor(Math.random() * 12);
-            const row = Math.floor(Math.random() * (12 - word.word.length + 1));
+            const col = Math.floor(Math.random() * 24);
+            const row = Math.floor(Math.random() * (24 - word.word.length + 1));
             const endRow = row + word.word.length - 1;
 
             verticalWords.push({ row, col, word: word.word, description });
@@ -170,8 +171,8 @@
         });
 
         // Add black cells
-        for (let i = 0; i < 12; i++) {
-            for (let j = 0; j < 12; j++) {
+        for (let i = 0; i < 24; i++) {
+            for (let j = 0; j < 24; j++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
                 if (!cell.dataset.word) {
                     cell.classList.add('black-cell');
