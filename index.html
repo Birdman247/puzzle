@@ -137,9 +137,28 @@
             const description = word.description;
             const row = Math.floor(Math.random() * 24);
             const col = Math.floor(Math.random() * (24 - word.word.length + 1));
-            const endCol = col + word.word.length - 1;
+            const endCol = col + word.word.length;
 
-            horizontalWords.push({ row, col, word: word.word, description });
+            // Check if any horizontal words intersect
+            let intersects = false;
+            for (let i = 0; i < word.word.length; i++) {
+                const cell = gridContainer.querySelector(`.cell[data-row="${row}"][data-col="${col + i}"]`);
+                if (cell.dataset.word) {
+                    intersects = true;
+                    break;
+                }
+            }
+            if (!intersects) {
+                horizontalWords.push({ row, col, word: word.word, description });
+                for (let i = 0; i < word.word.length; i++) {
+                    const cell = gridContainer.querySelector(`.cell[data-row="${row}"][data-col="${col + i}"]`);
+                    cell.dataset.word = word.word;
+                }
+                const nextCell = gridContainer.querySelector(`.cell[data-row="${row}"][data-col="${endCol}"]`);
+                if (nextCell) {
+                    nextCell.classList.add('black-cell');
+                }
+            }
         }
 
         while (verticalWords.length < 6) {
@@ -148,40 +167,26 @@
             const description = word.description;
             const col = Math.floor(Math.random() * 24);
             const row = Math.floor(Math.random() * (24 - word.word.length + 1));
-            const endRow = row + word.word.length - 1;
+            const endRow = row + word.word.length;
 
-            verticalWords.push({ row, col, word: word.word, description });
-        }
-
-        // Fill the grid with words
-        horizontalWords.forEach(word => {
+            // Check if any vertical words intersect
+            let intersects = false;
             for (let i = 0; i < word.word.length; i++) {
-                const cell = gridContainer.querySelector(`.cell[data-row="${word.row}"][data-col="${word.col + i}"]`);
-                cell.dataset.word = word.word;
-                const number = document.createElement('div');
-                number.classList.add('number');
-                number.textContent = (i === 0) ? horizontalWords.indexOf(word) + 1 : '';
-                cell.appendChild(number);
+                const cell = gridContainer.querySelector(`.cell[data-row="${row + i}"][data-col="${col}"]`);
+                if (cell.dataset.word) {
+                    intersects = true;
+                    break;
+                }
             }
-        });
-
-        verticalWords.forEach(word => {
-            for (let i = 0; i < word.word.length; i++) {
-                const cell = gridContainer.querySelector(`.cell[data-row="${word.row + i}"][data-col="${word.col}"]`);
-                cell.dataset.word = word.word;
-                const number = document.createElement('div');
-                number.classList.add('number');
-                number.textContent = (i === 0) ? verticalWords.indexOf(word) + 1 : '';
-                cell.appendChild(number);
-            }
-        });
-
-        // Add black cells
-        for (let i = 0; i < 24; i++) {
-            for (let j = 0; j < 24; j++) {
-                const cell = gridContainer.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
-                if (!cell.dataset.word) {
-                    cell.classList.add('black-cell');
+            if (!intersects) {
+                verticalWords.push({ row, col, word: word.word, description });
+                for (let i = 0; i < word.word.length; i++) {
+                    const cell = gridContainer.querySelector(`.cell[data-row="${row + i}"][data-col="${col}"]`);
+                    cell.dataset.word = word.word;
+                }
+                const nextCell = gridContainer.querySelector(`.cell[data-row="${endRow}"][data-col="${col}"]`);
+                if (nextCell) {
+                    nextCell.classList.add('black-cell');
                 }
             }
         }
@@ -200,45 +205,6 @@
             listItem.innerHTML = `<span>${index + 1}. Vertical: </span>${word.description}`;
             descriptionList.appendChild(listItem);
         });
-
-        // Event listener for cell click
-        gridContainer.addEventListener('click', handleCellClick);
-
-        function handleCellClick(event) {
-            const cell = event.target;
-            if (!cell.classList.contains('black-cell')) {
-                const letter = prompt('Enter a letter:');
-                if (letter) {
-                    const word = cell.dataset.word;
-                    const index = +cell.dataset.col - word.indexOf(letter.toUpperCase());
-                    if (word.includes(letter.toUpperCase()) || word.includes(letter.toLowerCase())) {
-                        cell.textContent = letter.toUpperCase();
-                        cell.classList.add('correct');
-                        cell.removeEventListener('click', handleCellClick);
-                        checkWord(word);
-                    } else {
-                        cell.textContent = letter.toUpperCase();
-                        cell.classList.add('incorrect');
-                    }
-                }
-            }
-        }
-
-        function checkWord(word) {
-            const cells = gridContainer.querySelectorAll(`.cell[data-word="${word}"]`);
-            let isWordComplete = true;
-            cells.forEach(cell => {
-                if (!cell.classList.contains('correct')) {
-                    isWordComplete = false;
-                }
-            });
-            if (isWordComplete) {
-                cells.forEach(cell => {
-                    cell.classList.remove('correct');
-                    cell.classList.add('completed');
-                });
-            }
-        }
     </script>
 </body>
 </html>
