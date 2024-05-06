@@ -194,29 +194,7 @@
             listItem.innerHTML = `<span>${index + 1}. Vertical: </span>${word.description}`;
             descriptionList.appendChild(listItem);
         });
-
-        // Event listener for cell click
-        gridContainer.addEventListener('click', handleCellClick);
-
-        function handleCellClick(event) {
-            const cell = event.target;
-            const description = cell.dataset.description ? cell.dataset.description : '';
-            showDescription(description);
-        }
-
-        function showDescription(description) {
-            const descriptionItems = document.querySelectorAll('.description-item');
-            descriptionItems.forEach(item => {
-                const text = item.textContent.split('.')[1].trim();
-                if (text === description) {
-                    item.querySelector('.description').textContent = description;
-                } else {
-                    item.querySelector('.description').textContent = '';
-                }
-            });
-        }
     </script>
 </body>
 </html>
-
 
