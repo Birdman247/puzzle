@@ -86,37 +86,32 @@
 <body>
     <div class="container">
         <ul class="description-list">
-            <!-- List of descriptions -->
         </ul>
         <div class="crossword">
             <div class="grid">
-                <!-- Generate 24x24 grid -->
-                <!-- Each cell represents a square in the crossword -->
             </div>
         </div>
     </div>
 
     <script>
         const words = [
-            { word: "APPLE", description: "Red fruit" },
-            { word: "BANANA", description: "Yellow fruit" },
-            { word: "ORANGE", description: "Orange fruit" },
-            { word: "GRAPE", description: "Small round fruit" },
-            { word: "MANGO", description: "Tropical fruit" },
-            { word: "PEAR", description: "Fruit with a core" },
-            { word: "PEACH", description: "Fuzzy fruit" },
-            { word: "WATERMELON", description: "Summer fruit" },
-            { word: "PINEAPPLE", description: "Tropical fruit" },
-            { word: "STRAWBERRY", description: "Red berry" },
-            { word: "BLUEBERRY", description: "Small purple fruit" },
-            { word: "KIWI", description: "Green fruit with brown skin" },
-            // Add more words if needed
+            { word: "APPLE", description: "Sweet fruit often baked in pies" },
+            { word: "BANANA", description: "Yellow fruit shaped like a telephone" },
+            { word: "ORANGE", description: "A fruit often used for its zest but pealed when eaten" },
+            { word: "GRAPE", description: "Small round fruit often in fruit salad" },
+            { word: "MANGO", description: "Tropical fruit with a pit" },
+            { word: "PEAR", description: "FSweet fruit often paired with nuts and cheese" },
+            { word: "PEACH", description: "Fuzzy fruit found in cobbler" },
+            { word: "WATERMELON", description: "Summer fruit that is sliced in wedges" },
+            { word: "PINEAPPLE", description: "Tropical fruit with a cool hairdo" },
+            { word: "STRAWBERRY", description: "Red berry used in smoothies" },
+            { word: "BLUEBERRY", description: "Small blue berry" },
+            { word: "KIWI", description: "Fuzzy green fruit" },
         ];
 
         const gridContainer = document.querySelector('.grid');
         const descriptionList = document.querySelector('.description-list');
 
-        // Generate the 24x24 grid
         for (let i = 0; i < 24; i++) {
             for (let j = 0; j < 24; j++) {
                 const cell = document.createElement('div');
@@ -127,7 +122,6 @@
             }
         }
 
-        // Generate horizontal and vertical words
         const horizontalWords = [];
         const verticalWords = [];
 
@@ -153,7 +147,6 @@
             verticalWords.push({ row, col, word: word.word, description });
         }
 
-        // Fill the grid with words
         horizontalWords.forEach(word => {
             for (let i = 0; i < word.word.length; i++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${word.row}"][data-col="${word.col + i}"]`);
@@ -176,7 +169,6 @@
             }
         });
 
-        // Add black cells
         for (let i = 0; i < 24; i++) {
             for (let j = 0; j < 24; j++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
@@ -186,7 +178,6 @@
             }
         }
 
-        // Fill the description list
         horizontalWords.forEach((word, index) => {
             const listItem = document.createElement('li');
             listItem.classList.add('description-item');
@@ -201,7 +192,6 @@
             descriptionList.appendChild(listItem);
         });
 
-        // Event listener for cell click
         gridContainer.addEventListener('click', handleCellClick);
 
         function handleCellClick(event) {
