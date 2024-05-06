@@ -53,6 +53,10 @@
             background-color: lightcoral;
         }
 
+        .completed {
+            background-color: lightgreen;
+        }
+
         .description-list {
             margin-right: 20px;
         }
@@ -125,48 +129,43 @@
         // Generate horizontal and vertical words
         const horizontalWords = [];
         const verticalWords = [];
-        const usedWords = new Set();
 
-        // Generate unique horizontal words
         while (horizontalWords.length < 6) {
             const randomIndex = Math.floor(Math.random() * words.length);
-            const word = words[randomIndex];
-            if (!usedWords.has(word.word)) {
-                usedWords.add(word.word);
-                const description = word.description;
-                const row = Math.floor(Math.random() * 12);
-                const col = Math.floor(Math.random() * (12 - word.word.length + 1));
-                const endCol = col + word.word.length - 1;
-                horizontalWords.push({ row, col, word: word.word, description });
-            }
+            const word = words.splice(randomIndex, 1)[0];
+            const description = word.description;
+            const row = Math.floor(Math.random() * 12);
+            const col = Math.floor(Math.random() * (12 - word.word.length + 1));
+            const endCol = col + word.word.length - 1;
+
+            horizontalWords.push({ row, col, word: word.word, description });
         }
 
-        // Generate unique vertical words
         while (verticalWords.length < 6) {
             const randomIndex = Math.floor(Math.random() * words.length);
-            const word = words[randomIndex];
-            if (!usedWords.has(word.word)) {
-                usedWords.add(word.word);
-                const description = word.description;
-                const col = Math.floor(Math.random() * 12);
-                const row = Math.floor(Math.random() * (12 - word.word.length + 1));
-                const endRow = row + word.word.length - 1;
-                verticalWords.push({ row, col, word: word.word, description });
-            }
+            const word = words.splice(randomIndex, 1)[0];
+            const description = word.description;
+            const col = Math.floor(Math.random() * 12);
+            const row = Math.floor(Math.random() * (12 - word.word.length + 1));
+            const endRow = row + word.word.length - 1;
+
+            verticalWords.push({ row, col, word: word.word, description });
         }
 
         // Fill the grid with words
-        horizontalWords.forEach((word, index) => {
+        horizontalWords.forEach(word => {
             for (let i = 0; i < word.word.length; i++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${word.row}"][data-col="${word.col + i}"]`);
                 cell.dataset.word = word.word;
+                cell.dataset.number = word.col + i === word.col ? word.row + 1 : null;
             }
         });
 
-        verticalWords.forEach((word, index) => {
+        verticalWords.forEach(word => {
             for (let i = 0; i < word.word.length; i++) {
                 const cell = gridContainer.querySelector(`.cell[data-row="${word.row + i}"][data-col="${word.col}"]`);
                 cell.dataset.word = word.word;
+                cell.dataset.number = word.row + i === word.row ? word.col + 1 : null;
             }
         });
 
@@ -184,14 +183,14 @@
         horizontalWords.forEach((word, index) => {
             const listItem = document.createElement('li');
             listItem.classList.add('description-item');
-            listItem.innerHTML = `<span>${index + 1}. Horizontal:</span> ${word.description}`;
+            listItem.innerHTML = `<span>${index + 1}. Horizontal: </span>${word.description}`;
             descriptionList.appendChild(listItem);
         });
 
         verticalWords.forEach((word, index) => {
             const listItem = document.createElement('li');
             listItem.classList.add('description-item');
-            listItem.innerHTML = `<span>${index + 1}. Vertical:</span> ${word.description}`;
+            listItem.innerHTML = `<span>${index + 1}. Vertical: </span>${word.description}`;
             descriptionList.appendChild(listItem);
         });
 
@@ -200,41 +199,21 @@
 
         function handleCellClick(event) {
             const cell = event.target;
+            const description = cell.dataset.number ? cell.dataset.number : '';
             const word = cell.dataset.word;
-            const description = getDescription(word);
-            showDescription(description);
-            const letter = prompt('Enter a letter:');
-            if (letter) {
-                const index = +cell.dataset.col - word.indexOf(letter.toUpperCase());
-                if (word.toUpperCase().includes(letter.toUpperCase())) {
-                    cell.textContent = letter.toUpperCase();
-                    cell.classList.add('correct');
-                    cell.removeEventListener('click', handleCellClick);
+            showDescription(description, word);
+        }
+
+        function showDescription(description, word) {
+            const descriptionItems = document.querySelectorAll('.description-item');
+            descriptionItems.forEach(item => {
+                const number = item.querySelector('span').textContent.split('.')[0];
+                if (number.trim() === description) {
+                    item.querySelector('.description').textContent = word;
                 } else {
-                    cell.textContent = letter.toUpperCase();
-                    cell.classList.add('incorrect');
+                    item.querySelector('.description').textContent = '';
                 }
-            }
-        }
-
-        function getDescription(word) {
-            const horizontalWord = horizontalWords.find(obj => obj.word === word);
-            const verticalWord = verticalWords.find(obj => obj.word === word);
-            if (horizontalWord) {
-                return horizontalWord.description;
-            } else if (verticalWord) {
-                return verticalWord.description;
-            }
-        }
-
-        function showDescription(description) {
-            const descriptions = document.querySelectorAll('.description');
-            descriptions.forEach(desc => {
-                desc.style.display = 'none';
             });
-            const descriptionItem = document.querySelector(`.description-item:contains(${description})`);
-            const desc = descriptionItem.querySelector('.description');
-            desc.style.display = 'block';
         }
     </script>
 </body>
