@@ -2,6 +2,9 @@ This is a crossword puzzle to go with my crossword solver program CrosswordHelpe
 My crossword helper wound up not working to help with crosswords I found onine, but it did still support hosting a local website 
 which could be useful for other applications. 
 
+Link to my project proposal:
+https://github.com/Birdman247/CPSC20000projectproposal
+
 For a brief run through:
 
 Cells are generated to create a 24x24 grid divided by column and row. Twelve words from my word list are chosen and the letters are each bound to a grid. 
