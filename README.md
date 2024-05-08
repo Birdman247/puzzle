@@ -19,6 +19,11 @@ The code for randmozing the cells which words were bound to is done by chatGPT. 
 
 The python code is in a text file named crosswordhelper.py. 
 
+It utilizes Flask and BeautifulSoup
+Flask is a micro web framework for Python used for building web applications.
+BeautifulSoup is a Python library for pulling data out of HTML and XML files.
+My Github "temnplate" provides the interface and responses
+
 Link to the repository for my Interface template: https://github.com/Birdman247/templates
 
 My name is Zander Bird
